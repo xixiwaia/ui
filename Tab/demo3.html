@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab选项卡_面向对象</title>
+  <style>
+    .container{
+      max-width: 800px;
+      margin: 30px auto;
+
+      border-radius: 4px;
+      box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
+      padding: 16px;
+    }
+
+    .tabs .tab-header{
+      position: relative;
+      display: flex;
+      font-size: 16px;
+      color: #303030;
+      line-height: 30px;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+    }
+
+    .tabs .tab-item{
+      margin-right: 30px;
+      
+      cursor: pointer;
+    }
+
+    .tabs .line{
+      position: absolute;
+      top: 100%;
+      width: 50px;
+      height: 2px;
+      background: #409ef4;
+      transform: translateX(0);
+      transition: all .3s;  /*  数值缓慢变化，line平滑运动   */
+    }
+
+    .tabs .tab-item.active{
+      color: #409ef4;
+      
+    }
+
+    .tabs .tab-panel{
+      padding: 16px 0;
+      font-size: 14px;
+      display: none;
+    }
+
+    .tabs .tab-panel.active{
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tab选项卡1</h2>
+    <div class="tabs">
+      <div class="tab-header">
+        <span class="tab-item active">用户管理</span>
+        <span class="tab-item">配置管理</span>
+        <span class="tab-item">角色管理</span>
+        <span class="tab-item">定时任务补偿</span>
+        <span class="line"></span>
+      </div>
+      <div class="tab-panel active">用户管理</div>
+      <div class="tab-panel">配置管理</div>
+      <div class="tab-panel">角色管理</div>
+      <div class="tab-panel">定时任务补偿</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Tab选项卡2</h2>
+    <div class="tabs">
+      <div class="tab-header">
+        <span class="tab-item active">用户管理</span>
+        <span class="tab-item">配置管理</span>
+        <span class="tab-item">角色管理</span>
+        <span class="tab-item">定时任务补偿</span>
+        <span class="line"></span>
+      </div>
+      <div class="tab-panel active">用户管理</div>
+      <div class="tab-panel">配置管理</div>
+      <div class="tab-panel">角色管理</div>
+      <div class="tab-panel">定时任务补偿</div>
+    </div>
+  </div>
+
+  <script>
+    //点击header时
+    //const $ = s => document.querySelector(s)
+    //const $$ = s => document.querySelectorAll(s)
+
+
+    class Tabs {
+      constructor($container){
+        this.$container = $container
+        this.$$tabItems = $container.querySelectorAll('.tab-item')
+        this.$$tabPanels = $container.querySelectorAll('.tab-panel')
+        this.$line = $container.querySelector('.line')
+
+        this.init()
+        this.bind()
+
+      }
+
+      init(){
+        this.$line.style.width = this.$$tabItems[0].offsetWidth + 'px'  //设置初始化line的长度
+
+      }
+
+      bind(){ //绑定数据
+        let self = this
+        this.$$tabItems.forEach($tab => {  //this
+          $tab.onclick = function() {  //里面的this变了，因此需要再最外面存一下self
+            //消除没有点击的items的active并对点击的items添加active
+            self.$$tabItems.forEach($tab => $tab.classList.remove('active'))
+            this.classList.add('active')
+
+            //console.log(this.offsetWidth)        
+            //console.log(this.offsetLeft)  //参考对象是.tabs .header的position: relative，没有relative则是body
+            self.$line.style.width = this.offsetWidth + 'px'
+            self.$line.style.transform = `translateX(${this.offsetLeft}px)`
+
+            //需要知道items对应的panel是什么
+            let index = [...$$tabItems].indexOf(this)  //转换成数组再使用indexof方法
+            //console.log(index)
+            self.$$tabPanels.forEach($panel => $panel.classList.remove('active'))
+            self.$$tabPanels[index].classList.add('active')
+          }
+        })
+      }
+    }
+
+
+    /*const $$tabItems = $$('.tabs .tab-item')
+    const $$tabPanels = $$('.tabs .tab-panel')
+    const $line = $('.tabs .line')
+
+    $line.style.width = $$tabItems[0].offsetWidth + 'px'  //设置初始化line的长度
+    */
+
+    /*$$tabItems.forEach($tab => {
+      $tab.onclick = function() {
+        //消除没有点击的items的active并对点击的items添加active
+        $$tabItems.forEach($tab => $tab.classList.remove('active'))
+        this.classList.add('active')
+
+        console.log(this.offsetWidth)        
+        console.log(this.offsetLeft)  //参考对象是.tabs .header的position: relative，没有relative则是body
+        $line.style.width = this.offsetWidth + 'px'
+        $line.style.transform = `translateX(${this.offsetLeft}px)`
+
+        //需要知道items对应的panel是什么
+        let index = [...$$tabItems].indexOf(this)  //转换成数组再使用indexof方法
+        //console.log(index)
+        $$tabPanels.forEach($panel => $panel.classList.remove('active'))
+        $$tabPanels[index].classList.add('active')
+      }
+    })
+    */
+
+    document.querySelectorAll('.tabs').forEach($container => new Tabs($container))
+    //new Tabs(document.querySelectorAll('.tabs')[0])
+    //new Tabs(document.querySelectorAll('.tabs')[1])
+
+  </script>
+</body>
+</html>
