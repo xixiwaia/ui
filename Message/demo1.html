@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1591966_u346be35l6.css">
+  <title>Document</title>
+  <style>
+    .container{
+      max-width: 800px;
+      margin: 30px auto;
+
+      border-radius: 4px;
+      box-shadow: 0 0 0 4px rgba(66, 64, 64, 0.3);
+      padding: 16px;
+    }
+
+    .button {
+      padding: 10px 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #303030;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;/*取消默认的蓝色圈圈*/
+      cursor: pointer;
+    }
+
+    .button:hover{
+      border-color: lightskyblue;
+      color: lightskyblue;
+    }
+
+    .message{
+      position: fixed; /*因为出现在顶端*/
+      left: 50%;
+      top: 10px;
+
+      display: flex;
+      align-items: center;
+      transform: translate(-50%,-50%);
+      padding: 10px 16px;
+      
+      background: #67C23A;
+      font-size: 14px;
+      color: #fff;
+      border-radius: 4px;
+      opacity: 0; /*透明*/
+      transition: all .3s;
+    }
+
+    .message .icon-font {
+      margin-right: 6px;
+    }
+
+    .message.show{
+      transform: translate(-50%,10px);
+      opacity: 1;
+    }
+
+    .message.success {
+      background-color: #67C23A;
+    }
+
+    .message.warning {
+      background-color: #E6A23C;
+    }
+
+    .message.info {
+      background-color: #909399;
+    }
+
+    .message.danger {
+      background-color: #F56C6C;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Message消息提示</h2>
+    <div class="btn-group">
+      <button id="btn-success" class="button">成功</button>
+      <button id="btn-warning" class="button">警告</button>
+      <button id="btn-info" class="button">消息</button>
+      <button id="btn-danger" class="button">错误</button>
+    </div>
+    
+
+  </div>
+
+  <script>
+
+    class Message{
+      //传递对象，避免只传递一个参数时对应不上
+      /*constructor(options){  
+        this.type = options.type || 'success'
+      }
+      *写法较老
+      */
+
+      //es6
+      //设置默认值
+      constructor({type = 'success', text = ''}){  
+        this.type = type
+        this.text = text
+
+        this.render()
+        this.bind()
+      }
+
+      //渲染函数，创建dom结构
+      render() {
+        let $div = document.createElement('div')
+        this.$message = $div
+        $div.classList.add('message')
+        $div.classList.add(this.type)
+        let $icon = document.createElement('span')
+        $icon.classList.add('icon-font')
+        $icon.classList.add('icon-' + this.type)
+        $div.appendChild($icon)
+        let $text = document.createTextNode(this.text)
+        $div.appendChild($text)
+        document.body.appendChild($div)
+      }
+
+      //出现得很突然，因为一开始浏览器就渲染了show
+      show(){  
+        this.$message.classList.add('show')
+      }
+
+      //虽然隐藏了，但是创建的dom结构还在，当页面中创建了过多，浏览器效率会变低，因此把hide变成destroy
+      hide(){  
+        this.$message.classList.remove('show')
+
+      }
+
+      //remove show的动画刚开始，message就被删除了，因此消失得很突然
+      destroy(){
+        this.$message.classList.remove('show')
+        //this.$message.parentNode.removeChild(this.$message)
+        setTimeout(() => this.$message.parentNode.removeChild(this.$message), 400)
+      }
+
+      bind(){  //绑定事件为先展示，再消失
+        setTimeout(() => this.show())//设置定时器让它出现得不突然
+        //this.show()
+        setTimeout(() => this.destroy(), 3000)
+      }
+    }
+
+
+    document.querySelector('#btn-success').onclick = function(){
+      new Message({text: '成功',type:'success'})
+      //new Message({type: 'success', text: '我是提示'})
+    }
+
+    document.querySelector('#btn-warning').onclick = function(){
+      new Message({text: '警告',type:'warning'})
+    }
+
+    document.querySelector('#btn-info').onclick = function(){
+      new Message({text: '消息',type:'info'})
+    }
+
+    document.querySelector('#btn-danger').onclick = function(){
+      new Message({text: '危险',type:'danger'})
+    }
+
+  </script>
+</body>
+</html>
