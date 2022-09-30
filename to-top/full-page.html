@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全屏滚动</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    section{
+      height: 100vh;
+    }
+    section:nth-child(1) {
+      background: lightblue;
+    }
+    section:nth-child(2) {
+      background: lightcoral;
+    }
+    section:nth-child(3){
+      background: lightcyan;
+    }
+    section:nth-child(4){
+      background: lightgoldenrodyellow;
+    }
+  </style>
+</head>
+<body>
+  <section>page1</section>
+  <section>page2</section>
+  <section>page3</section>
+  <section>page4</section>
+
+  <script>
+    function debounce(fn, wait) {
+      let task = null;
+      return function ()
+    }
+
+    window.onkeydown = function(e) {
+      console.log(e)
+      if(e.key === 'ArrowDown') {
+        e.preventDefault()
+        window.scrollBy({
+          top:window.innerHeight,
+          behavior: 'smooth'
+        })
+      } else if(e.key === 'ArrowUp'){
+        e.preventDefault()
+        window.scrollBy({
+          top: 0 - window.innerHeight,
+          behavior:'smooth'
+        })
+      }
+    }
+
+
+  </script>
+</body>
+</html>
